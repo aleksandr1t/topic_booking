@@ -22,21 +22,27 @@ class BaseModel(Model):
 class Booking(BaseModel):
     time_of_creation = DateTimeField()
     telegram_id = IntegerField()
-    content = CharField()
-    content_type = CharField()
     times_can_choose = IntegerField()
 
     class Meta:
         db_table = 'bookings'
 
 
+class Photos(BaseModel):
+    photo_id = IntegerField()
+    booking_id = IntegerField()
+
+    class Meta:
+        db_table = 'photos'
+
+
 class TopicList(BaseModel):
     time_of_creation = DateTimeField()
     booking_id = IntegerField()
-    content = CharField()
+    topic_in_booking_id = IntegerField()
 
     class Meta:
-        db_table = 'list_of_topics'
+        db_table = 'topics'
 
 
 class UserList(BaseModel):
@@ -45,7 +51,8 @@ class UserList(BaseModel):
     telegram_id = IntegerField()
 
     class Meta:
-        db_table = 'list_of_topics'
+        db_table = 'users'
 
 
-# db.create_tables([Booking, TopicList, UserList])
+if __name__ == "__main__":
+    db.create_tables([Booking, Photos, TopicList, UserList])

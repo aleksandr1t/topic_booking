@@ -1,15 +1,24 @@
 from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton
 
-nick_keyboard = ReplyKeyboardMarkup(
+yes_or_no_keyboard = ReplyKeyboardMarkup(
+    keyboard=[
+        [KeyboardButton(text="Да, зарегистрировать бронь")],
+        [KeyboardButton(text="Нет, сбросить форму")]
+    ],
+    resize_keyboard=True,
+    one_time_keyboard=True,
+    input_field_placeholder='Вы говорите боту, мол, '
+)
+
+next_keyboard = ReplyKeyboardMarkup(
     keyboard=[
         [
-            KeyboardButton(text="Да"),
-            KeyboardButton(text="Нет, изменить ник")
+            KeyboardButton(text="Дальше")
         ]
     ],
     resize_keyboard=True,
     one_time_keyboard=True,
-    input_field_placeholder='Не придумал Вы можете'
+    input_field_placeholder='Вы говорите боту, мол, '
 )
 
 garik_keyboard = ReplyKeyboardMarkup(

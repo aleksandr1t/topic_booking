@@ -2,26 +2,31 @@ from aiogram import Router, F
 from aiogram.types import Message
 from aiogram.filters import CommandStart, Command
 from aiogram.fsm.context import FSMContext
+
+import keyboards.keyboards
 from utils import states
 from datetime import datetime
 from model_db import *
+from config import trusted_ids
 
 router = Router()
 
 
 @router.message(CommandStart())
 async def command_start_handler(message: Message, state: FSMContext) -> None:
-    pass
+    await message.answer(f"Здраствуй, {message.from_user.first_name}\n")
 
 
-@router.message(Command('make_booking'))
-async def command_make_booking(message: Message, state: FSMContext) -> None:
-    await state.set_state(states.BookingState.content)
-    await message.answer(f"Отправьте темы для выбора\n\n"
-                         f""
-                         f"<i>Вы можете отправить картинку (картинки) или текст."
-                         f"Текст на картинке распознан не будет, людям будет предложено просто выбрать номер темы."
-                         f"Если вы решите отправить текст, "
-                         f"каждый вопрос должен отделяться переносом строки для распозновния вопросов. Например,</i>"
-                         f"<b>1. Вопрос 1"
-                         f"2. Вопрос 2...</b>")
+@router.message(Command('new_booking'))
+async def command_new_booking(message: Message, state: FSMContext) -> None:
+    if message.from_user.id not in trusted_ids:
+        await message.answer(f"Вас нет в списке доверенных лиц, позволяемым создание записи.")
+        return
+
+    await state.set_state(states.Create.photos_ids)
+    await message.answer(f"Отправьте фотографии тем.\n"
+                         f"\n"
+                         f"<i>Вы можете отправить до 1488 фото. Как только закончите отправлять фотографии, "
+                         f"нажмите на кнопку <b>Дальше</b></i>\n"
+                         f"<b>Вопрос 1/3</b>", reply_markup=keyboards.keyboards.next_keyboard)
+

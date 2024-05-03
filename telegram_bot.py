@@ -17,8 +17,6 @@ from aiogram.types import FSInputFile
 from aiogram.fsm.storage.redis import RedisStorage
 
 
-server_ip = '147.185.221.18:35666'
-
 TOKEN = TOKEN_epta
 bot = Bot(TOKEN, parse_mode=ParseMode.HTML)
 
