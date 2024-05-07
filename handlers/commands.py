@@ -16,7 +16,8 @@ router = Router()
 
 @router.message(CommandStart())
 async def command_start_handler(message: Message, state: FSMContext) -> None:
-    await message.answer(f"Здраствуй, {message.from_user.first_name}\n")
+    await message.answer(f"Здраствуй, {message.from_user.first_name}. Позже по этому команде можно будет "
+                         f"подписаться на рассылку.")
 
 
 @router.message(Command('new_booking'))
