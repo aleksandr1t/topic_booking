@@ -76,10 +76,32 @@ async def select_people_for_topic(message: Message, state: FSMContext):
         except ValueError:
             await message.answer(f"Скинь цифоркой пожалуйстаааааааааа😧")
             return
-        await message.answer(f"Значит-ся, все записали.")
 
+    await message.answer(f"Записал. Идем дальше")
     await state.update_data(people_for_topic=people_for_topic)
+    await state.set_state(Create.note)
+    await message.answer(f"Напишите дополнительную информацию к брони. "
+                         f"Эта информация будет отображена снизу картинок.\n"
+                         f"\n"
+                         f"<i>Если дополнительной информации нет, нажмите Пропустить </i>🤨\n"
+                         f"<b>Вопрос 4/4</b>", reply_markup=next_keyboard)
+
+
+@router.message(Create.note)
+async def leave_note(message: Message, state: FSMContext):
+    if not message.text:
+        await message.answer(f"Скинь текстом.")
+        return
+
+    if message.text.lower() == 'пропустить':
+        note = ''
+    else:
+        note = '\n' + message.text
+    await message.answer(f"Значит-ся, все записали.")
+
+    await state.update_data(note=note)
     await state.set_state(Create.okay_bro_yeah_mazafaka)
+
     await message.answer(f"Вы уверены, что хотите \"открыть бронь\"?", reply_markup=yes_or_no_keyboard)
 
 
@@ -105,7 +127,10 @@ async def confidence(message: Message, state: FSMContext):
 
         await message.bot.send_message(id_broadcast, 'Доброго времени суток, мои любимки!\n'
                                                      f'Разбираем темки! 1 тема = '
-                                                     f'<b>{data['people_for_topic']}</b> человек(а)',
+                                                     f"<b>{data['people_for_topic']}</b> человек(а)"
+                                                     f"{data['note']}\n\n"
+                                                     f'<tg-spoiler>Скажем большое спасибо<a href="tg://user?id=1027005788"> '
+                                                     f'Александру Викторовичу</a> за разработку бота❤</tg-spoiler>',
                                       reply_markup=builders.create_keyboard(booking.id, topic_ids))
 
         await message.answer('Создано!', reply_markup=ReplyKeyboardRemove())

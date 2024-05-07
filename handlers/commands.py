@@ -1,5 +1,7 @@
+import random
+
 from aiogram import Router, F
-from aiogram.types import Message
+from aiogram.types import Message, input_file
 from aiogram.filters import CommandStart, Command
 from aiogram.fsm.context import FSMContext
 
@@ -20,7 +22,10 @@ async def command_start_handler(message: Message, state: FSMContext) -> None:
 @router.message(Command('new_booking'))
 async def command_new_booking(message: Message, state: FSMContext) -> None:
     if message.from_user.id not in trusted_ids:
-        await message.answer(f"Вас нет в списке доверенных лиц, позволяемым создание записи.")
+        await message.answer(f"Вас нет в списке доверенных лиц, "
+                             f"позволяемым создание записи. Но не растраиваетесь! Держите котика!")
+        cat_id = str(random.randint(1, 10))
+        await message.bot.send_photo(message.chat.id, input_file.FSInputFile(f'cats/{cat_id}.jpg'))
         return
 
     await state.set_state(states.Create.photos_ids)
@@ -28,5 +33,5 @@ async def command_new_booking(message: Message, state: FSMContext) -> None:
                          f"\n"
                          f"<i>Вы можете отправить до 1488 фото. Как только закончите отправлять фотографии, "
                          f"нажмите на кнопку <b>Дальше</b></i>\n"
-                         f"<b>Вопрос 1/3</b>")
+                         f"<b>Вопрос 1/4</b>")
 

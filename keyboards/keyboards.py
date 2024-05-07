@@ -13,7 +13,7 @@ yes_or_no_keyboard = ReplyKeyboardMarkup(
 next_keyboard = ReplyKeyboardMarkup(
     keyboard=[
         [
-            KeyboardButton(text="Дальше")
+            KeyboardButton(text="Пропустить")
         ]
     ],
     resize_keyboard=True,
