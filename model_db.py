@@ -49,6 +49,7 @@ class UserList(BaseModel):
     time_of_creation = DateTimeField()
     topic_id = IntegerField()
     telegram_id = IntegerField()
+    booking_id = IntegerField()
 
     class Meta:
         db_table = 'users'

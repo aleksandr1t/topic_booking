@@ -6,4 +6,4 @@ class Create(StatesGroup):
     quantity_of_topics = State()
     people_for_topic = State()
     okay_bro_yeah_mazafaka = State()
-    photo_fix = State()
+    note = State()

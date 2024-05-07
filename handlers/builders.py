@@ -1,11 +1,13 @@
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 
-def form_rate_keyboard(form_id):
+def create_keyboard(booking_id, topics_ids, busies=[]):
     builder_keyboard = InlineKeyboardBuilder()
 
-    builder_keyboard.button(text='✅ Одобрено', callback_data=f'{form_id},1')
-    builder_keyboard.button(text='❌ Отказано', callback_data=f'{form_id},0')
+    for i, j in topics_ids.items():
+        if i in busies:
+            j = f'✅{j}'
+        builder_keyboard.button(text=f"{j}", callback_data=f"{booking_id},{i}")
 
-    builder_keyboard.adjust(2)
     return builder_keyboard.as_markup()
+

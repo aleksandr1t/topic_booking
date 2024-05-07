@@ -28,5 +28,5 @@ async def command_new_booking(message: Message, state: FSMContext) -> None:
                          f"\n"
                          f"<i>Вы можете отправить до 1488 фото. Как только закончите отправлять фотографии, "
                          f"нажмите на кнопку <b>Дальше</b></i>\n"
-                         f"<b>Вопрос 1/3</b>", reply_markup=keyboards.keyboards.next_keyboard)
+                         f"<b>Вопрос 1/3</b>")
 
