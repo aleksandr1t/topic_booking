@@ -9,6 +9,7 @@ from handlers import builders
 from keyboards.keyboards import *
 from model_db import *
 from aiogram.fsm.context import FSMContext
+from config import *
 
 router = Router()
 id_broadcast = -1002033272937
@@ -136,8 +137,12 @@ async def confidence(message: Message, state: FSMContext):
                                                            f' будет эмодзи ✅. Если Вы передумали и хотите '
                                                            f'взять иную тему, нажмите на номер не занятой темы. '
                                                            f'Если Вы хотите отказаться от темы и не выбирать новую, '
-                                                           f'повторно нажмите на кнопку уже выбранной вами темы ',
-                                      reply_markup=builders.create_keyboard(booking.id, topic_ids))
+                                                           f'повторно нажмите на кнопку уже выбранной вами темы \n'
+                                                           f'\n'
+                                                           f'С уважением, '
+                                                           f'<a href="tg://user?id={message.from_user.id}>'
+                                                           f'{telegram_ids[message.from_user.id].split(' ')[1]}</a>',
+                                             reply_markup=builders.create_keyboard(booking.id, topic_ids))
         await message.bot.pin_chat_message(id_broadcast, msg.message_id, False)
 
         await message.answer('Создано!', reply_markup=ReplyKeyboardRemove())

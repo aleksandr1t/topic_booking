@@ -104,7 +104,7 @@ async def select_topic(call: CallbackQuery):
                     busies.append(topic_id)
 
         await call.bot.send_message(call.message.chat.id,
-                                    f'<a href="tg://user?id={user_id}">{name}</a> занял тему {humanreadable_topic}',
+                                    f'<a href="tg://user?id={user_id}">{name}</a> занял(а) тему {humanreadable_topic}',
                                     reply_to_message_id=call.inline_message_id)
         try:
             await call.message.edit_reply_markup(call.inline_message_id,
