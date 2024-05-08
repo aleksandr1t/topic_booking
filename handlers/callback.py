@@ -28,15 +28,50 @@ async def select_topic(call: CallbackQuery):
         for note in topic_note2:
             humanreadable_topic = note.topic_in_booking_id
     if user_id in topic_note_telegram_id:
-        await call.answer(f'Вы уже заняли эту тему. Если вы хотите изменить тему, '
-                          f'нажмите на кнопку свободной темы', True)
+        # await call.answer(f'Вы уже заняли эту тему. Если вы хотите изменить тему, '
+                          # f'нажмите на кнопку свободной темы', True)
+        with db:
+            UserList().delete().where(UserList.topic_id == topic).execute()
+            topic_note = TopicList().select().where(TopicList.id == topic)
+            for note2 in topic_note:
+                humanreadable_topic2 = note2.topic_in_booking_id
+            await call.bot.send_message(call.message.chat.id,
+                                            f'<a href="tg://user?id={user_id}">{name}</a> '
+                                            f'больше не занимает тему {humanreadable_topic2}',
+                                            reply_to_message_id=call.inline_message_id)
+        topic_ids = {}
+        busies = []
+        topic_bd = TopicList().select().where(TopicList.booking_id == booking_id)
+        for topic in topic_bd:
+            topic_ids[topic.id] = topic.topic_in_booking_id
+
+        user_bd = UserList().select().where(UserList.booking_id == booking_id)
+        temp = []
+        for note in user_bd:
+            temp.append(note.topic_id)
+        for topic_id in temp:
+            if temp.count(topic_id) == times_can_choose:
+                busies.append(topic_id)
+        try:
+            await call.message.edit_reply_markup(call.inline_message_id,
+                                                 reply_markup=builders.create_keyboard(booking_id, topic_ids, busies))
+        except aiogram.exceptions.TelegramBadRequest:
+            pass
+        await call.answer()
+
         return
     if len(topic_note) == times_can_choose:
+        students = ''
+        for i in topic_note_telegram_id:
+            students += telegram_ids[i].split(' ')[0] + ' ' + telegram_ids[i].split(' ')[1] + ', '
+        else:
+            students = students[:-2]
         if joke:
             await call.bot.send_voice(call.message.chat.id, FSInputFile(f'zanato.ogg'),
-                                    caption=f'<a href="tg://user?id={user_id}">{name}</a>, ')
+                                      caption=f'<a href="tg://user?id={user_id}">{name}</a>, '
+                                              f'{students} так не дума(ет/ют)')
         else:
-            await call.answer('Выбранная вами тема занята!', True)
+            await call.answer(f'Выбраная тема занята следующим(и) одногруппник(ом/ами): {students}', True)
         return
     else:
         with db:
@@ -73,7 +108,7 @@ async def select_topic(call: CallbackQuery):
                                     reply_to_message_id=call.inline_message_id)
         try:
             await call.message.edit_reply_markup(call.inline_message_id,
-                                             reply_markup=builders.create_keyboard(booking_id, topic_ids, busies))
+                                                 reply_markup=builders.create_keyboard(booking_id, topic_ids, busies))
         except aiogram.exceptions.TelegramBadRequest:
             pass
 

@@ -11,7 +11,7 @@ from model_db import *
 from aiogram.fsm.context import FSMContext
 
 router = Router()
-id_broadcast = -4231935078
+id_broadcast = -1002033272937
 
 
 @router.message(Create.photos_ids)
@@ -125,13 +125,20 @@ async def confidence(message: Message, state: FSMContext):
         await message.answer('Отправляем в чат фотки...')
         await message.bot.send_media_group(id_broadcast, media.build())
 
-        await message.bot.send_message(id_broadcast, 'Доброго времени суток, мои любимки!\n'
+        # <tg-spoiler>Скажем большое спасибо<a href="tg://user?id=1027005788">
+        # Александру Викторовичу</a> за разработку бота❤</tg-spoiler>
+        msg = await message.bot.send_message(id_broadcast, 'Доброго времени суток, мои любимки!\n'
                                                      f'Разбираем темки! 1 тема = '
                                                      f"<b>{data['people_for_topic']}</b> человек(а)"
                                                      f"{data['note']}\n\n"
-                                                     f'<tg-spoiler>Скажем большое спасибо<a href="tg://user?id=1027005788"> '
-                                                     f'Александру Викторовичу</a> за разработку бота❤</tg-spoiler>',
+                                                     f'Нажмите на кнопку с номером темы, которую Вы решии выбрать по '
+                                                           f'фотографии выше. Если тема уже занята, около номера темы'
+                                                           f' будет эмодзи ✅. Если Вы передумали и хотите '
+                                                           f'взять иную тему, нажмите на номер не занятой темы. '
+                                                           f'Если Вы хотите отказаться от темы и не выбирать новую, '
+                                                           f'повторно нажмите на кнопку уже выбранной вами темы ',
                                       reply_markup=builders.create_keyboard(booking.id, topic_ids))
+        await message.bot.pin_chat_message(id_broadcast, msg.message_id, False)
 
         await message.answer('Создано!', reply_markup=ReplyKeyboardRemove())
 
